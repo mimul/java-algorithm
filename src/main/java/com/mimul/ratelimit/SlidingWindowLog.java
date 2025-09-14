@@ -1,9 +1,8 @@
 package com.mimul.ratelimit;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.LinkedList;
 import java.util.Queue;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SlidingWindowLog extends RateLimiter {
