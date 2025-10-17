@@ -14,7 +14,7 @@ public:
   explicit RingBuffer(size_t size) : buffer_(size) {}
 
   // Returns true on success. Fails if the buffer is full.
-  bool push(int item) {
+  bool enqueue(int item) {
     uint64_t write_idx = write_idx_.load(std::memory_order_relaxed);
     if (write_idx - cached_read_idx_ == buffer_.size()) {
       cached_read_idx_ = read_idx_.load(std::memory_order_acquire);
@@ -28,7 +28,7 @@ public:
   }
 
   // Returns true on success. Fails if the buffer is empty.
-  bool pop(int *dest) {
+  bool dequeue(int *dest) {
     uint64_t read_idx = read_idx_.load(std::memory_order_relaxed);
     if (cached_write_idx_ == read_idx) {
       cached_write_idx_ = write_idx_.load(std::memory_order_acquire);
@@ -58,7 +58,7 @@ template <typename RingBufferType> double benchmark(RingBufferType &rb) {
         for (uint64_t i = 0; i < bmtCount; ++i) {
           int count = 1000;
           while (0 < count) {
-            if (rb.push(count)) {
+            if (rb.enqueue(count)) {
               count--;
             }
           }
@@ -69,7 +69,7 @@ template <typename RingBufferType> double benchmark(RingBufferType &rb) {
         for (uint64_t i = 0; i < bmtCount; ++i) {
           int count = 1000;
           while (0 < count) {
-            if (rb.pop(&result)) {
+            if (rb.dequeue(&result)) {
               count--;
             }
           }
