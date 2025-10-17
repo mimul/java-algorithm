@@ -7,8 +7,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class GuavaBloomFilterDemo {
+	private static final int maxInt = 500;
+
 	public static void main(String[] args) {
-		final int maxInt = 500;
+
 		final Funnel<Integer> funnel = (Integer x, PrimitiveSink into) -> into.putInt(x);
 		final BloomFilter<Integer> bloomFilter = BloomFilter.create(funnel, maxInt);
 
